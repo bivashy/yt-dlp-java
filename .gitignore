@@ -22,3 +22,7 @@ target/
 gradle
 
 .vscode/
+
+.project
+.classpath
+.settings/
