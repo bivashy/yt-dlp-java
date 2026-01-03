@@ -6,12 +6,12 @@
 
     <groupId>io.github.bivashy</groupId>
     <artifactId>yt-dlp-java</artifactId>
-    <version>2.0.4</version>
+    <version>2.0.5</version>
     <packaging>jar</packaging>
 
     <name>Yt-Dlp wrapper</name>
     <description>Java wrapper for yt-dlp executable</description>
-    <url>https://github.com/bivashyyt-dlp-java</url>
+    <url>https://github.com/bivashy/yt-dlp-java</url>
 
     <licenses>
         <license>
