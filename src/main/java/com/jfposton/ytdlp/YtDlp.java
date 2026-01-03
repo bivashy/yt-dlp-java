@@ -10,6 +10,7 @@ import com.jfposton.ytdlp.utils.StreamProcessExtractor;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -133,28 +134,31 @@ public class YtDlp {
      * Retrieve all information available on a video
      *
      * @param url Video url
-     * @return Video info
+     * @return Video infos
      * @throws YtDlpException
      */
-    public static VideoInfo getVideoInfo(String url) throws YtDlpException {
+    public static List<VideoInfo> getVideoInfo(String url) throws YtDlpException {
 
         // Build request
         YtDlpRequest request = new YtDlpRequest(url);
         request.setOption("dump-json");
-        request.setOption("no-playlist");
         YtDlpResponse response = YtDlp.execute(request);
 
         // Parse result
         ObjectMapper objectMapper = new ObjectMapper();
-        VideoInfo videoInfo;
+        List<VideoInfo> result = new ArrayList<>();
 
         try {
-            videoInfo = objectMapper.readValue(response.getOut(), VideoInfo.class);
+            String output = response.getOut();
+            String[] lines = output.split(System.lineSeparator());
+            for (String line : lines) {
+                result.add(objectMapper.readValue(line, VideoInfo.class));
+            }
         } catch (IOException e) {
             throw new YtDlpException("Unable to parse video information: " + e.getMessage());
         }
 
-        return videoInfo;
+        return result;
     }
 
     /**
@@ -165,8 +169,8 @@ public class YtDlp {
      * @throws YtDlpException
      */
     public static List<VideoFormat> getFormats(String url) throws YtDlpException {
-        VideoInfo info = getVideoInfo(url);
-        return info.getFormats();
+        List<VideoInfo> info = getVideoInfo(url);
+        return info.stream().flatMap(v -> v.getFormats().stream()).toList();
     }
 
     /**
@@ -177,8 +181,8 @@ public class YtDlp {
      * @throws YtDlpException
      */
     public static List<VideoThumbnail> getThumbnails(String url) throws YtDlpException {
-        VideoInfo info = getVideoInfo(url);
-        return info.getThumbnails();
+        List<VideoInfo> info = getVideoInfo(url);
+        return info.stream().flatMap(v -> v.getThumbnails().stream()).toList();
     }
 
     /**
@@ -189,8 +193,8 @@ public class YtDlp {
      * @throws YtDlpException
      */
     public static List<String> getCategories(String url) throws YtDlpException {
-        VideoInfo info = getVideoInfo(url);
-        return info.getCategories();
+        List<VideoInfo> info = getVideoInfo(url);
+        return info.stream().flatMap(v -> v.getCategories().stream()).toList();
     }
 
     /**
@@ -201,8 +205,8 @@ public class YtDlp {
      * @throws YtDlpException
      */
     public static List<String> getTags(String url) throws YtDlpException {
-        VideoInfo info = getVideoInfo(url);
-        return info.getTags();
+        List<VideoInfo> info = getVideoInfo(url);
+        return info.stream().flatMap(v -> v.getTags().stream()).toList();
     }
 
     /**
