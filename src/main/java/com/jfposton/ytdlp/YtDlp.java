@@ -142,7 +142,6 @@ public class YtDlp {
         // Build request
         YtDlpRequest request = new YtDlpRequest(url);
         request.setOption("dump-json");
-        request.setOption("no-playlist");
         YtDlpResponse response = YtDlp.execute(request);
 
         // Parse result
