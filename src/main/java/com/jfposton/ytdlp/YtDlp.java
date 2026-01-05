@@ -55,12 +55,30 @@ public class YtDlp {
     /**
      * Execute yt-dlp request
      *
-     * @param request  request object
-     * @param callback callback
+     * @param request          request object
+     * @param progressCallback callback
      * @return response object
      * @throws YtDlpException
      */
-    public static YtDlpResponse execute(YtDlpRequest request, DownloadProgressCallback callback)
+    public static YtDlpResponse execute(YtDlpRequest request, DownloadProgressCallback progressCallback)
+            throws YtDlpException {
+        return execute(request, progressCallback,
+                null,
+                null);
+    }
+
+    /**
+     * Execute yt-dlp request
+     *
+     * @param request          request object
+     * @param progressCallback callback
+     * @param stdOutCallback   stdout callback of process
+     * @param errOutCallback   error callback of process
+     * @return response object
+     * @throws YtDlpException
+     */
+    public static YtDlpResponse execute(YtDlpRequest request, DownloadProgressCallback progressCallback,
+            StreamOutputCallback stdOutCallback, StreamOutputCallback errOutCallback)
             throws YtDlpException {
 
         String command = buildCommand(request.buildOptions());
@@ -91,8 +109,9 @@ public class YtDlp {
         InputStream outStream = process.getInputStream();
         InputStream errStream = process.getErrorStream();
 
-        StreamProcessExtractor stdOutProcessor = new StreamProcessExtractor(outBuffer, outStream, callback);
-        StreamGobbler stdErrProcessor = new StreamGobbler(errBuffer, errStream);
+        StreamProcessExtractor stdOutProcessor = new StreamProcessExtractor(outBuffer, outStream, progressCallback,
+                stdOutCallback);
+        StreamGobbler stdErrProcessor = new StreamGobbler(errBuffer, errStream, errOutCallback);
 
         try {
             stdOutProcessor.join();
