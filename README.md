@@ -20,7 +20,7 @@ Otherwise you will get this error :
 <dependency>
     <groupId>io.github.bivashy</groupId>
     <artifactId>yt-dlp-java</artifactId>
-    <version>2.0.6</version>
+    <version>2.0.7</version>
 </dependency>
 ```
 
