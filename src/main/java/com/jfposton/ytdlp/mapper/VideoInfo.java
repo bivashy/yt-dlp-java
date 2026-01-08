@@ -1,7 +1,11 @@
 package com.jfposton.ytdlp.mapper;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import com.fasterxml.jackson.annotation.JsonAnySetter;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -50,6 +54,18 @@ public class VideoInfo {
     private List<String> tags;
     private List<VideoFormat> formats;
     private List<VideoThumbnail> thumbnails;
+
+    @JsonIgnore
+    private Map<String, Object> extraProperties = new HashMap<>();
+
+    @JsonAnySetter
+    public void setExtraProperty(String name, Object value) {
+        extraProperties.put(name, value);
+    }
+
+    public Map<String, Object> getExtraProperties() {
+        return extraProperties;
+    }
 
     public String getId() {
         return id;
